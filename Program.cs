@@ -1,40 +1,37 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using Dynastream.Fit;
 
 class Program
 {
-    private static int msgCounter = 0;
-    private static int  msgDefinitionCounter = 0;
-    private static int developerFieldDescriptionCounter = 0;
+    // TODO: Check if this is the correct protocol version
+    readonly static Encode encode = new(ProtocolVersion.V20);
 
     static void Main(string[] args)
     {
         string originalFile = "examples/original.fit";
-        string mergedFile = "output.fit";
+        string mergedFile = "examples/merged.fit";
 
         FileStream? originalFileStream = null;
-        
+        FileStream? mergedFileStream = null;
 
         try
         {
+            originalFileStream = new(originalFile, FileMode.Open);
+            mergedFileStream = new FileStream(mergedFile, FileMode.Create, FileAccess.ReadWrite);
+
             Decode decode = new();
-            FitListener fitListener = new();
-            decode.MesgEvent += fitListener.OnMesg;
             decode.MesgEvent += OnMesgCustom;
             decode.MesgDefinitionEvent += OnMesgDefinitionCustom;
-            decode.DeveloperFieldDescriptionEvent += OnDeveloperFieldDescriptionCustom;
-
-            originalFileStream = new(originalFile, FileMode.Open);
+            
+            encode.Open(mergedFileStream);
 
             decode.Read(originalFileStream);
 
-            FitMessages fitMessages = fitListener.FitMessages;
+            encode.Close();
 
-            Console.WriteLine("Number of Messages: " + msgCounter);
-            Console.WriteLine("Number of Message Definitions: " + msgDefinitionCounter);
-            Console.WriteLine("Number of Developer Field Descriptions: " + developerFieldDescriptionCounter);
-            Console.WriteLine("Number of Records: " + fitMessages.RecordMesgs.Count);
+            Console.WriteLine("Merged file saved to " + mergedFileStream.Name);
         }
         catch (FitException ex)
         {
@@ -47,29 +44,40 @@ class Program
         finally
         {
             originalFileStream?.Close();
+            mergedFileStream?.Close();
         }
-    }
-
-    private static void OnDeveloperFieldDescriptionCustom(object? sender, DeveloperFieldDescriptionEventArgs e)
-    {
-        developerFieldDescriptionCounter++;
     }
 
     private static void OnMesgDefinitionCustom(object sender, MesgDefinitionEventArgs e)
     {
-        msgDefinitionCounter++;
+        encode.Write(e.mesgDef);
     }
 
     private static void OnMesgCustom(object sender, MesgEventArgs e)
     {
-        msgCounter++;
-    }
-
-    // Example Placeholder for Calculating Power
-    static float CalculatePower(RecordMesg record)
-    {
-        // Replace with your logic to calculate power
-        // For demonstration, we return a static value
-        return 200.0f; // Example value in watts
+        if(e.mesg.Num == 20) // Record message
+        {
+            RecordMesg recordMesg = new(e.mesg);
+            recordMesg.SetPower(123);
+            encode.Write(recordMesg);
+        }
+        else if (e.mesg.Num == 19) // Lap message
+        {
+            LapMesg lapMesg = new(e.mesg);
+            lapMesg.SetAvgPower(123);
+            lapMesg.SetMaxPower(123);
+            encode.Write(lapMesg);
+        }
+        else if (e.mesg.Num == 18) // Session message
+        {
+            SessionMesg sessionMesg = new(e.mesg);
+            sessionMesg.SetAvgPower(123);
+            sessionMesg.SetMaxPower(123);
+            encode.Write(sessionMesg);
+        }
+        else 
+        {
+            encode.Write(e.mesg);
+        }
     }
 }
