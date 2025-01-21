@@ -11,4 +11,12 @@
     <PackageReference Include="Garmin.FIT.Sdk" Version="21.158.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed> <!-- Optional: Trim unused libraries -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier> <!-- Change to your target platform -->
+    <SelfContained>true</SelfContained> <!-- Include .NET runtime -->
+  </PropertyGroup>
+
 </Project>
