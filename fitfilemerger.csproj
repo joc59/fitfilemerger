@@ -11,8 +11,4 @@
     <PackageReference Include="Garmin.FIT.Sdk" Version="21.158.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="examples\**\*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>

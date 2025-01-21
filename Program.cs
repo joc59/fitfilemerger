@@ -4,10 +4,16 @@ class Program
 {
     static void Main(string[] args)
     {
-        string originalFile = "examples/original.fit";
-        string mergedFile = "examples/merged.fit";
+        if (args.Length != 3)
+        {
+            Console.WriteLine("Usage: fitfilemerger.exe path\\to\\main.fit path\\to\\secondary.fit path\\to\\merged.fit");
+            return;
+        }
+        string mainFile = args[0];
+        string secondaryFile = args[1];
+        string mergedFile = args[2];
 
-        using var sourceFileStream = new FileStream(originalFile, FileMode.Open);
+        using var mainFileStream = new FileStream(mainFile, FileMode.Open);
         using var destinationFileStream = new FileStream(mergedFile, FileMode.Create, FileAccess.ReadWrite);
         Decode decode = new();
         Encode encode = new(ProtocolVersion.V20);
@@ -21,7 +27,7 @@ class Program
         try
         {
             encode.Open(destinationFileStream);
-            decode.Read(sourceFileStream);
+            decode.Read(mainFileStream);
         }
         catch (Exception ex)
         {
