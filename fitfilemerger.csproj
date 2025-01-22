@@ -14,9 +14,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <PublishSingleFile>true</PublishSingleFile>
-    <PublishTrimmed>true</PublishTrimmed> <!-- Optional: Trim unused libraries -->
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier> <!-- Change to your target platform -->
-    <SelfContained>true</SelfContained> <!-- Include .NET runtime -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
 </Project>
