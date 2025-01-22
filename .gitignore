@@ -1,4 +1,4 @@
 # Ignore bin and obj directories
 bin/
 obj/
-examples/merged.fit
+examples/merged*.fit

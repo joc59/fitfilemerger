@@ -1,15 +1,21 @@
 # FIT File Merger
 
 ## Purpose
-The FIT File Merger is a tool designed to merge multiple FIT files recorded into a single file. This is particularly useful for athletes and fitness enthusiasts who use multiple devices to track their activities and want to consolidate their data.
+The FIT File Merger is a tool designed to merge multiple FIT files recorded into a single file. This is particularly
+useful for athletes and fitness enthusiasts who use multiple devices to track their activities and want to consolidate
+their data.
 
-FIT File Merger is intended to merge data recorded on multiple devices at the same time during the same activity into a single file. It is not intended to chain subsequent activities together.
+FIT File Merger is intended to merge data recorded on multiple devices at the same time during the same activity into
+a single file. It is not intended to chain subsequent activities together.
 
 ### Currently supported functionality
 
 #### Merge Power data from separate fit file into a main fit file. 
 
-This is useful when you have no connection from your powermeter, home trainer, or an app to your cycling computer. Using FIT File Merger, you can merge the separately recorded power data into the fit file recorded by your bike computer without loosing any data. This includes calculations of average and max values for each lap as well as for the total session.
+This is useful when you have no connection from your powermeter, home trainer, or an app to your cycling computer. 
+Using FIT File Merger, you can merge the separately recorded power data into the fit file recorded by your bike
+computer without losing any data. This includes calculations of average and max values for each lap as well as for the
+total session.
 
 ## Usage
 ```bash
@@ -39,6 +45,9 @@ fitfilemerger.exe path\to\main.fit path\to\secondary.fit path\to\merged.fit
     ```
 
 ## Debugging
+The files in `examples` can be used for testing and debugging purposes. The `garmin-` files are meant to be the main
+files,  while the `elite-` files contain power values and are meant to be the secondary files. As a result, the power
+values from the `elite-` will be merged into the `garmin-` file.
 1. Add the following to your ``launch.json``:
      ```json
     "version": "0.2.0",
@@ -49,9 +58,9 @@ fitfilemerger.exe path\to\main.fit path\to\secondary.fit path\to\merged.fit
         "preLaunchTask": "build",
         "program": "${workspaceFolder}/fitfilemerger/bin/Debug/net8.0/fitfilemerger.dll",
         "args": [
-            "examples/main.fit",
-            "examples/secondary.fit",
-            "examples/merged.fit"
+            "examples/garmin-2025-01-17.fit",
+            "examples/elite-2025-01-17.fit",
+            "examples/merged-2025-01-17.fit"
         ],
         "cwd": "${workspaceFolder}/fitfilemerger",
         "justMyCode": true,
@@ -77,11 +86,12 @@ fitfilemerger.exe path\to\main.fit path\to\secondary.fit path\to\merged.fit
     ]
     ```
 
-
 ## Contributing
 Pull requests are welcome!
 
 ## License
 Distributed under the Unlicense License. See `LICENSE.txt` for more information.
 
-FIT File Merger requires the [Garmin FIT File SDK](https://developer.garmin.com/fit/overview/), which is published by Garmin under a different license. Garmin FIT File SDK is not included in this repository but will be installed through your package manager upon build.
+FIT File Merger requires the [Garmin FIT File SDK](https://developer.garmin.com/fit/overview/), which is published by
+Garmin under a different license. Garmin FIT File SDK is not included in this repository but will be installed through
+your package manager upon build.

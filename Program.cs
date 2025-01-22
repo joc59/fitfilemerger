@@ -22,13 +22,16 @@ class Program
         Encode encode = new(ProtocolVersion.V20);
 
         PowerCalculator powerCalculator = new();
+        WorkoutStepFixer workoutStepFixer = new();
 
         // Recording power values from the secondary file
         decodeSecondary.MesgEvent += (_, e) => powerCalculator.OnPowerMesg(e.mesg);
 
         // Adding power values to the mesages from main file and passing them to the merged file
         decodeMain.MesgEvent += (_, e) => powerCalculator.OnMainMesg(e.mesg);
-        powerCalculator.MesgEvent += (_, e) => encode.OnMesg(e.mesg);
+        // Fixing the workout steps in the main file to avoid problems when encoding the merged file
+        powerCalculator.MesgEvent += (_, e) => workoutStepFixer.OnMesg(e.mesg);
+        workoutStepFixer.MesgEvent += (_, e) => encode.OnMesg(e.mesg);
 
         // Passing the mesg definitions to the main file to the merged file unaltered
         decodeMain.MesgDefinitionEvent += (_, e) => encode.OnMesgDefinition(e.mesgDef);
